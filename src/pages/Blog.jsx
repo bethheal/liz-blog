@@ -48,11 +48,19 @@ function Blog() {
   }
 
 
-  //Handle Like a Blog
-  const handleLikeBlog =  (blogId ) =>{
-    setLike(!like);
+  //Handle Like a Blog, its going to update in db when a blog is liked
+  // const handleLikeBlog = async (blogId ) =>{
+  //   try {
+  //         await axios.patch(API_URL + `/${blogId}`,{like: !like} )
+
+      
+  //   } catch (err) {
+  //     console.log(err);
+      
+  //   }
+      
     
-  }
+  // }
   return (
     <div className="flex  flex-row  ">
       <div className="flex  flex-wrap justify-center items-center w-1/2  bg-blue-200 h-full">
