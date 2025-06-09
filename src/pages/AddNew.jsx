@@ -34,7 +34,7 @@ function AddNew() {
       description:"",
       imgAttach :"",
     });
-    // navigate("/blog")
+    navigate("/blog")
    } catch (err) {
     console.log(err)
     

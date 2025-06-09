@@ -9,7 +9,6 @@ function Blog() {
   const [isExpandText, setIsExpandText] = useState(false);
   const [blogClicked, setBlogClicked] = useState(null);
   const [isDelete, setIsDelete] = useState(false);
-  const [like, setLike] = useState(false);
 
   // fetch data from api store in BLOGS
   useEffect(() => {
@@ -49,29 +48,50 @@ function Blog() {
 
 
   //Handle Like a Blog, its going to update in db when a blog is liked
-  // const handleLikeBlog = async (blogId ) =>{
-  //   try {
-  //         await axios.patch(API_URL + `/${blogId}`,{like: !like} )
+  const handleLikeBlog = async (blogId ) =>{
+    try {
+        const res =  await axios.get(API_URL + `/${blogId}` )
+        const currentLikes = res.data
 
-      
-  //   } catch (err) {
-  //     console.log(err);
-      
-  //   }
-      
+        const updatedLikes = {...currentLikes, liked: !currentLikes.liked};
+
+        await axios.put(API_URL + `/${blogId}`, updatedLikes); 
+
+        setBlogs((prevBlogs) =>
+          prevBlogs.map((blog) =>
+            blog.id === blogId ? { ...blog, liked: !blog.liked } : blog
+          )
+        );
+       
+
+    } catch (err) {
+      console.log("failed to like ",err)
+
+    }
+  }
     
+  
+
+  // const handleLikeBlog = (blogId) => {
+  //   setLike(!like); // Toggle  like state
+  //   console.log(`Blog with ID ${blogId} liked: ${!like}`);
   // }
   return (
     <div className="flex  flex-row  ">
-      <div className="flex  flex-wrap justify-center items-center w-1/2  bg-blue-200 h-full">
+      <div className="flex  flex-wrap justify-center items-center w-1/2  bg-blue-200 h-[100vh]">
         {blogs.map((blog, index) => (
           <div
             className="flex flex-col bg-blue-800 w-[40vw] text-white h-[20vh] shadow-lg shadow-blue-500/50  border-amber-500 rounded-xl  mx-40  my-10 justify-center p-10"
             key={index}
           >
             <div className="flex justify-end items-center hover:  mb-2 ">
-              <Heart className="cursor-pointer gap-2" onClick={()=>handleLikeBlog(blog.id)}  color={like ? "red" : "white"} fill={like ? "red" : "none"}/>
-                 {/* colour === red if like is true else white same as fill */}
+<Heart
+  className="cursor-pointer gap-2"
+  onClick={() => handleLikeBlog(blog.id)}
+  color={blog.liked ? "red" : "white"}
+  fill={blog.liked ? "red" : "none"}
+/>
+
               <Trash className="cursor-pointer" onClick={() =>handleDeleteBlog(blog.id)}/>
             </div>
             {/* <img
@@ -102,7 +122,9 @@ function Blog() {
       {/* <h1 className="text-4xl justify-center text-blue-800 font-bold"> Read Full Story</h1> */}
 
       <div className="flex   justify-center items-center w-1/2 h-[100vh]">
+
         <div className="flex flex-col  text-blue-800 h-[60vh] w-[70vw] shadow-lg shadow-blue-500/50  border-amber-500 rounded-xl my-20 mx-10 justify-center p-10">
+
           {blogClicked && (
             //Show this when a blog is clicked
             <div>

@@ -6,6 +6,8 @@ const API_URL = "http://localhost:3000/blogs";
 
 function Home() {
   const [blogs, setBlogs] = useState([]);
+  const favoriteBlogs = blogs.filter(blog => blog.liked);
+
 
   useEffect(() => {
     const fetchBlogs = async () => {
@@ -35,7 +37,7 @@ function Home() {
           <p className="text-base">{blog.description.length > 40 ? blog.description.slice(0, 40) + "..." : blog.description}</p>
 
            <NavLink
-        to={`/blog/${blog.id}`}
+        to= "/blog"
         className="mt-4 text-yellow-400 hover:underline text-sm"
       >
         Read More →
@@ -45,14 +47,26 @@ function Home() {
     </div>
   </section>
 
-  {/* Bottom Section: Favorites (placeholder for now) */}
-  <section className="mt-10 border-t border-blue-300 pt-10">
-    <h2 className="text-3xl font-bold text-blue-800 mb-6">Favorite Blogs</h2>
-    <div className="flex flex-wrap justify-center gap-10">
-      {/* Future: Map over favorite blogs here */}
+  {/* Bottom Section: Favorites */}
+<section className="mt-10 border-t border-blue-300 pt-10">
+  <h2 className="text-3xl font-bold text-blue-800 mb-6">Favorite Blogs</h2>
+  <div className="flex flex-wrap justify-center gap-10">
+    {favoriteBlogs.length === 0 ? (
       <div className="text-blue-500 text-center italic">No favorites yet.</div>
-    </div>
-  </section>
+    ) : (
+      favoriteBlogs.map((blog) => (
+        <div
+          key={blog.id}
+          className="bg-white text-blue-800 w-[300px] p-6 rounded-lg shadow-lg border border-blue-200"
+        >
+          <h3 className="text-xl font-semibold mb-2">{blog.title}</h3>
+          <p className="text-sm">{blog.description.slice(0, 100)}...</p>
+        </div>
+      ))
+    )}
+  </div>
+</section>
+
 </div>
 
   );
